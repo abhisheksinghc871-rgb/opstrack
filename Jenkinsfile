@@ -40,14 +40,35 @@ pipeline {
                 '''
             }
         }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                    cd /home/ubuntu/opstrack
+                    docker compose up -d --build
+                    docker compose ps
+                '''
+            }
+        }
+
+        stage('Deployment Verification') {
+            steps {
+                sh '''
+                    sleep 10
+                    curl -f http://localhost/
+                    curl -f http://localhost/api/health || true
+                    docker compose -f /home/ubuntu/opstrack/docker-compose.yml ps
+                '''
+            }
+        }
     }
 
     post {
         success {
-            echo 'OpsTrack CI Pipeline: SUCCESS'
+            echo 'OpsTrack CI/CD Pipeline: SUCCESS'
         }
         failure {
-            echo 'OpsTrack CI Pipeline: FAILED'
+            echo 'OpsTrack CI/CD Pipeline: FAILED'
         }
     }
 }
