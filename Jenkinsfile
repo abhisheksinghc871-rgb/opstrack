@@ -45,7 +45,7 @@ pipeline {
             steps {
                 sh '''
                     cd /home/ubuntu/opstrack
-                    docker compose up -d --build
+                    docker compose up -d --build --wait
                     docker compose ps
                 '''
             }
