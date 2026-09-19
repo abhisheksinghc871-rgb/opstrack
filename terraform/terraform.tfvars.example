@@ -1,0 +1,2 @@
+aws_region  = "us-east-1"
+instance_id = "REPLACE_WITH_YOUR_EC2_INSTANCE_ID"
