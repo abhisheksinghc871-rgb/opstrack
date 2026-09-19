@@ -41,6 +41,18 @@ pipeline {
             }
         }
 
+        stage('Terraform Validate & Plan') {
+            steps {
+                sh '''
+                    cd terraform
+                    terraform init -input=false
+                    terraform fmt -check
+                    terraform validate
+                    terraform plan -input=false
+                '''
+            }
+        }
+
         stage('Deploy') {
             steps {
                 sh '''
