@@ -1,40 +1,40 @@
 import apiClient from "./client";
 
 export const authApi = {
-  login: (email, password) => apiClient.post("/api/auth/login", { email, password }),
+  login: (email, password) => apiClient.post("/auth/login", { email, password }),
   register: (email, fullName, password) =>
-    apiClient.post("/api/auth/register", { email, full_name: fullName, password }),
-  me: () => apiClient.get("/api/auth/me"),
+    apiClient.post("/auth/register", { email, full_name: fullName, password }),
+  me: () => apiClient.get("/auth/me"),
 };
 
 export const usersApi = {
-  list: () => apiClient.get("/api/users"),
+  list: () => apiClient.get("/users"),
 };
 
 export const tasksApi = {
-  list: (params = {}) => apiClient.get("/api/tasks", { params }),
-  get: (id) => apiClient.get(`/api/tasks/${id}`),
-  create: (payload) => apiClient.post("/api/tasks", payload),
-  update: (id, payload) => apiClient.patch(`/api/tasks/${id}`, payload),
-  remove: (id) => apiClient.delete(`/api/tasks/${id}`),
+  list: (params = {}) => apiClient.get("/tasks", { params }),
+  get: (id) => apiClient.get(`/tasks/${id}`),
+  create: (payload) => apiClient.post("/tasks", payload),
+  update: (id, payload) => apiClient.patch(`/tasks/${id}`, payload),
+  remove: (id) => apiClient.delete(`/tasks/${id}`),
 };
 
 export const incidentsApi = {
-  list: (params = {}) => apiClient.get("/api/incidents", { params }),
-  get: (id) => apiClient.get(`/api/incidents/${id}`),
-  create: (payload) => apiClient.post("/api/incidents", payload),
-  update: (id, payload) => apiClient.patch(`/api/incidents/${id}`, payload),
-  remove: (id) => apiClient.delete(`/api/incidents/${id}`),
+  list: (params = {}) => apiClient.get("/incidents", { params }),
+  get: (id) => apiClient.get(`/incidents/${id}`),
+  create: (payload) => apiClient.post("/incidents", payload),
+  update: (id, payload) => apiClient.patch(`/incidents/${id}`, payload),
+  remove: (id) => apiClient.delete(`/incidents/${id}`),
 };
 
 export const commentsApi = {
   list: (entityType, entityId) =>
-    apiClient.get("/api/comments", { params: { entity_type: entityType, entity_id: entityId } }),
+    apiClient.get("/comments", { params: { entity_type: entityType, entity_id: entityId } }),
   create: (entityType, entityId, body) =>
-    apiClient.post("/api/comments", { entity_type: entityType, entity_id: entityId, body }),
-  remove: (id) => apiClient.delete(`/api/comments/${id}`),
+    apiClient.post("/comments", { entity_type: entityType, entity_id: entityId, body }),
+  remove: (id) => apiClient.delete(`/comments/${id}`),
 };
 
 export const dashboardApi = {
-  stats: () => apiClient.get("/api/dashboard/stats"),
+  stats: () => apiClient.get("/dashboard/stats"),
 };
