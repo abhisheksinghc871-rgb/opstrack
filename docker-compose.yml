@@ -1,0 +1,55 @@
+version: "3.9"
+
+# Simple local development stack: frontend -> backend -> postgres.
+# This is intentionally minimal - it is meant to make local app
+# development easy, not to be a production deployment. The DevOps
+# engineer will design the production container/orchestration setup
+# separately (Kubernetes, ECS, etc.).
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-opstrack}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-opstrack}
+      POSTGRES_DB: ${POSTGRES_DB:-opstrack}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - opstrack_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-opstrack}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg2://opstrack:opstrack@db:5432/opstrack}
+      JWT_SECRET: ${JWT_SECRET:-please-change-this-to-a-long-random-string}
+      APP_ENV: ${APP_ENV:-development}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:3000}
+    ports:
+      - "${API_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  opstrack_pgdata:
