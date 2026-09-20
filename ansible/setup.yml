@@ -1,0 +1,38 @@
+---
+- name: Configure OpsTrack server
+  hosts: opstrack
+  become: true
+
+  tasks:
+    - name: Check Docker service
+      ansible.builtin.service_facts:
+
+    - name: Verify Docker is running
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.services['docker.service'].state == 'running'
+        fail_msg: "Docker service is not running"
+        success_msg: "Docker service is running"
+
+    - name: Check OpsTrack project directory
+      ansible.builtin.stat:
+        path: /home/ubuntu/opstrack
+      register: opstrack_dir
+
+    - name: Verify OpsTrack project exists
+      ansible.builtin.assert:
+        that:
+          - opstrack_dir.stat.exists
+          - opstrack_dir.stat.isdir
+        fail_msg: "OpsTrack project directory not found"
+        success_msg: "OpsTrack project directory exists"
+
+    - name: Check Docker Compose
+      ansible.builtin.command:
+        cmd: docker compose version
+      register: compose_version
+      changed_when: false
+
+    - name: Show Docker Compose version
+      ansible.builtin.debug:
+        var: compose_version.stdout

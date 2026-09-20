@@ -1,0 +1,20 @@
+---
+- name: Deploy OpsTrack application
+  hosts: opstrack
+
+  tasks:
+    - name: Deploy OpsTrack with Docker Compose
+      ansible.builtin.command:
+        cmd: docker compose up -d --build --wait
+        chdir: /home/ubuntu/opstrack
+
+    - name: Show running OpsTrack containers
+      ansible.builtin.command:
+        cmd: docker compose ps
+        chdir: /home/ubuntu/opstrack
+      register: compose_ps
+      changed_when: false
+
+    - name: Display container status
+      ansible.builtin.debug:
+        var: compose_ps.stdout

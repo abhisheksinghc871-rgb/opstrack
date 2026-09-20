@@ -41,27 +41,26 @@ pipeline {
             }
         }
 
-        stage('Terraform Validate & Plan') {
-            steps {
-                sh '''
-                    cd terraform
-                    terraform init -input=false
+        stage('Terraform Validate') {
+    	    steps {
+        	sh '''
+            	    cd terraform
+                    terraform init -backend=false -input=false
                     terraform fmt -check
                     terraform validate
-                    terraform plan -input=false
                 '''
-            }
-        }
+             }
+         }
 
         stage('Deploy') {
-            steps {
-                sh '''
-                    cd /home/ubuntu/opstrack
-                    docker compose up -d --build --wait
-                    docker compose ps
-                '''
-            }
-        }
+	     steps {
+                 sh '''
+		     ansible-playbook \
+                     -i /home/ubuntu/opstrack/ansible/inventory \
+                     /home/ubuntu/opstrack/ansible/deploy.yml
+                 '''
+              }
+         }
 
         stage('Deployment Verification') {
             steps {
