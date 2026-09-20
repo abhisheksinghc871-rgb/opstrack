@@ -40,6 +40,21 @@ pipeline {
                 '''
             }
         }
+	stage('Security Scan - Trivy') {
+	    steps {
+	        sh '''
+	            trivy image \
+	              --severity HIGH,CRITICAL \
+	              --exit-code 0 \
+	              opstrack-backend:ci
+
+	            trivy image \
+	              --severity HIGH,CRITICAL \
+	              --exit-code 0 \
+	              opstrack-frontend:ci
+	        '''
+	    }
+	}
 
         stage('Terraform Validate') {
     	    steps {
