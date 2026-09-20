@@ -2,6 +2,7 @@ import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request, status
+from prometheus_fastapi_instrumentator import Instrumentator
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -10,6 +11,7 @@ from app.api.routes import auth, comments, dashboard, health, incidents, tasks, 
 from app.core.config import settings
 from app.core.logging import configure_logging, log_requests_middleware
 from app.db.database import Base, engine
+
 
 configure_logging()
 logger = logging.getLogger("opstrack")
@@ -35,6 +37,8 @@ app = FastAPI(
     openapi_url="/api/openapi.json",
     lifespan=lifespan,
 )
+
+Instrumentator().instrument(app).expose(app)
 
 app.add_middleware(
     CORSMiddleware,

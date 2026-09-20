@@ -1,4 +1,3 @@
-version: "3.9"
 
 # Simple local development stack: frontend -> backend -> postgres.
 # This is intentionally minimal - it is meant to make local app
@@ -11,9 +10,9 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-opstrack}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-opstrack}
-      POSTGRES_DB: ${POSTGRES_DB:-opstrack}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     
     volumes:
       - opstrack_pgdata:/var/lib/postgresql/data
@@ -27,9 +26,15 @@ services:
     build:
       context: ./backend
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg2://opstrack:opstrack@db:5432/opstrack}
-      JWT_SECRET: ${JWT_SECRET:-please-change-this-to-a-long-random-string}
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
       APP_ENV: ${APP_ENV:-development}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:3000}

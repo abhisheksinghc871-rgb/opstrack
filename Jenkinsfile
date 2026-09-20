@@ -78,15 +78,21 @@ pipeline {
          }
 
         stage('Deployment Verification') {
-            steps {
-                sh '''
-                    sleep 10
-                    curl -f http://localhost/
-                    curl -f http://localhost/api/health || true
-                    docker compose -f /home/ubuntu/opstrack/docker-compose.yml ps
-                '''
-            }
-        }
+	    steps {
+	        sh '''
+	            curl -f http://localhost/
+
+	            docker compose \
+	              -f /home/ubuntu/opstrack/docker-compose.yml \
+	              exec -T backend \
+	              curl -f http://localhost:8000/health
+
+	            docker compose \
+	              -f /home/ubuntu/opstrack/docker-compose.yml \
+	              ps
+	        '''
+	    }
+	}
     }
 
     post {
