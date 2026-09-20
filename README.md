@@ -17,29 +17,44 @@ The application consists of a React/Vite frontend, FastAPI backend, and PostgreS
 
 ## 🏗️ DevOps Architecture
 
-```mermaid
-flowchart TD
-    A[Developer] --> B[GitHub]
-    B --> C[Jenkins CI/CD]
+```text
+Developer
+    │
+    ▼
+ GitHub
+    │
+    ▼
+ Jenkins CI/CD
+    │
+    ├── Backend Tests
+    ├── Docker Build
+    └── Trivy Scan
+             │
+             ▼
+        Deployment
+          /     \
+         /       \
+        ▼         ▼
+    AWS EC2   Kubernetes
+        │       + Helm
+        ▼
+      Nginx
+        │
+   ┌────┴────┐
+   ▼         ▼
+Frontend   Backend
+             │
+             ▼
+         PostgreSQL
 
-    C --> D[Backend Tests]
-    C --> E[Docker Build]
-    C --> F[Trivy Scan]
+Backend Metrics
+      │
+      ▼
+ Prometheus
+      │
+      ▼
+   Grafana
 
-    D --> G[Deployment]
-    E --> G
-    F --> G
-
-    G --> H[AWS EC2]
-    G --> I[Kubernetes + Helm]
-
-    H --> J[Nginx]
-    J --> K[React Frontend]
-    J --> L[FastAPI Backend]
-    L --> M[PostgreSQL]
-
-    L --> N[Prometheus]
-    N --> O[Grafana]
 
 ---
 
