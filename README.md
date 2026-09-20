@@ -1,17 +1,45 @@
-# OpsTrack
+# 🚀 OpsTrack
 
-**OpsTrack** is a lightweight Task & Incident Management Platform built for a
-small engineering / operations team. It's the kind of internal tool a team
-might use to track day-to-day work (tasks) alongside production issues
-(incidents) in one place, with a simple dashboard to see the current state
-of both at a glance.
+### DevOps CI/CD & Cloud Deployment Platform
 
-This repository contains the **application only** (backend + frontend +
-database schema). It is intentionally built to be simple, testable, and
-easy to containerize so it can serve as a realistic base for a separate
-DevOps/production-deployment implementation (CI/CD, Docker, Kubernetes,
-AWS, monitoring, etc.) — see the [`DevOps Implementation`](#devops-implementation)
-section at the bottom.
+[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Jenkins](https://img.shields.io/badge/Jenkins-CI%2FCD-D24939?logo=jenkins&logoColor=white)](https://www.jenkins.io/)
+[![AWS](https://img.shields.io/badge/AWS-EC2-232F3E?logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-Orchestration-326CE5?logo=kubernetes&logoColor=white)](https://kubernetes.io/)
+[![Terraform](https://img.shields.io/badge/Terraform-Infrastructure-7B42BC?logo=terraform&logoColor=white)](https://www.terraform.io/)
+[![Ansible](https://img.shields.io/badge/Ansible-Automation-EE0000?logo=ansible&logoColor=white)](https://www.ansible.com/)
+
+> OpsTrack is a lightweight Task & Incident Management Platform designed as a hands-on application for implementing DevOps practices across the software delivery lifecycle.
+
+The application consists of a React/Vite frontend, FastAPI backend, and PostgreSQL database. The project focuses on containerization, CI/CD automation, cloud deployment, infrastructure automation, Kubernetes, security scanning, and monitoring.
+
+---
+
+## 🏗️ DevOps Architecture
+
+```mermaid
+flowchart TD
+    A[Developer] --> B[GitHub]
+    B --> C[Jenkins CI/CD]
+
+    C --> D[Backend Tests]
+    C --> E[Docker Build]
+    C --> F[Trivy Scan]
+
+    D --> G[Deployment]
+    E --> G
+    F --> G
+
+    G --> H[AWS EC2]
+    G --> I[Kubernetes + Helm]
+
+    H --> J[Nginx]
+    J --> K[React Frontend]
+    J --> L[FastAPI Backend]
+    L --> M[PostgreSQL]
+
+    L --> N[Prometheus]
+    N --> O[Grafana]
 
 ---
 
